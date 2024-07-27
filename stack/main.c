@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #define SIZE 3
+#define MAX_INPUT 100
 int stack[SIZE];
 int top = -1;
 
@@ -28,12 +29,13 @@ int main(void)
     pop();
     getTop();
     showStack();
+    return 0;
     */
-    #define MAX_INPUT 100
-    char input[MAX_INPUT] = "{ a * ( b - c }"; //Incorrect
-    //char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e )"; //Incorrect
-    //char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e ) ]"; //Correct
-    //char input[MAX_INPUT] = "{ x + ( y - b ) * c - [ ( d + e ) ] }"; //Correct
+    
+    char input[MAX_INPUT] = "{ a * ( b - c }"; // Incorrect
+    // char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e )"; //Incorrect
+    // char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e ) ]"; //Correct
+    // char input[MAX_INPUT] = "{ x + ( y - b ) * c - [ ( d + e ) ] }"; //Correct
     int i;
     for (i = 0; i < MAX_INPUT; i++)
     {
@@ -64,13 +66,14 @@ int main(void)
             }
         }
     }
-    if(empty())
+    if (empty())
     {
-        printf("Correct expression\n");   
+        printf("Correct expression\n");
         return 0;
     }
     printf("Incorrect expression\n");
     return -1;
+    
 }
 
 void push(int value)
