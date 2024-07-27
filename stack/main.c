@@ -7,11 +7,12 @@ int top = -1;
 void push(int value);
 int empty();
 void pop();
-void getTop();
+int getTop();
 void showStack();
 
 int main(void)
 {
+    /*
     push(3);
     push(4);
     push(2);
@@ -27,7 +28,49 @@ int main(void)
     pop();
     getTop();
     showStack();
-    return 0;
+    */
+    #define MAX_INPUT 100
+    char input[MAX_INPUT] = "{ a * ( b - c }"; //Incorrect
+    //char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e )"; //Incorrect
+    //char input[MAX_INPUT] = "x + ( y - b ) * c - [ ( d + e ) ]"; //Correct
+    //char input[MAX_INPUT] = "{ x + ( y - b ) * c - [ ( d + e ) ] }"; //Correct
+    int i;
+    for (i = 0; i < MAX_INPUT; i++)
+    {
+        char currentChar = input[i];
+        if (currentChar == 123 || currentChar == 40 || currentChar == 91) // {: 123 (: 40 [:91
+        {
+            push(currentChar);
+        }
+        else if (currentChar == 125 || currentChar == 41 || currentChar == 93)
+        {
+            char topChar = getTop();
+            if (topChar == 123 && currentChar == 125) // }: 125
+            {
+                pop();
+            }
+            else if (topChar == 40 && currentChar == 41) // ): 41
+            {
+                pop();
+            }
+            else if (topChar == 91 && currentChar == 93) // ]:92
+            {
+                pop();
+            }
+            else
+            {
+                printf("Incorrect expression\n");
+                return -1;
+            }
+        }
+    }
+    if(empty())
+    {
+        printf("Correct expression\n");   
+        return 0;
+    }
+    printf("Incorrect expression\n");
+    return -1;
 }
 
 void push(int value)
@@ -62,14 +105,15 @@ void pop()
     top--;
 }
 
-void getTop()
+int getTop()
 {
     if (empty())
     {
         printf("Top not show\n");
-        return;
+        return -1;
     }
     printf("Top: %d\n", stack[top]);
+    return stack[top];
 }
 
 void showStack()
