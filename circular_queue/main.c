@@ -2,48 +2,48 @@
 
 #define SIZE 3
 int array[SIZE];
-int front = 0;
-int rear = -1;
+int head = 0;
+int tail = -1;
 int count = 0;
 
 void enqueue(int value);
 void dequeue(void);
-void getFront(void);
-void printQueue(void);
+void peek(void);
+void showQueue(void);
 
 void main(void){
     dequeue();
 
     enqueue(10);
     enqueue(8);
-    printQueue();
+    showQueue();
 
     enqueue(12);
     enqueue(14);
 
-    printQueue();
+    showQueue();
 
     dequeue();
-    printQueue();
+    showQueue();
 
     enqueue(14);
-    printQueue();
+    showQueue();
 
-    getFront();
+    peek();
 
-    /*
     enqueue(16);
+    /*
     enqueue(1);
     enqueue(2);
     enqueue(3);
     enqueue(4);
     enqueue(5);
-    printQueue();
+    showQueue();
     dequeue();
-    printQueue();
+    showQueue();
     enqueue(6);
-    printQueue();
-    getFront();
+    showQueue();
+    peek();
     */
 }
 
@@ -53,11 +53,11 @@ void enqueue(int value){
         return;
     }
     count++;
-    rear++;
-    if(rear == SIZE){
-        rear = 0;
+    tail++;
+    if(tail == SIZE){
+        tail = 0;
     }
-    array[rear] = value;
+    array[tail] = value;
 }
 
 void dequeue(void){
@@ -66,26 +66,26 @@ void dequeue(void){
         return;
     }
     count--;
-    front++;
-    if(front == SIZE){
-        front = 0;
+    head++;
+    if(head == SIZE){
+        head = 0;
     }
 }
 
-void getFront(void){
+void peek(void){
     if(count == 0){
         printf("Queue empty");
         return;
     }
-    printf("Front of queue: %d\n", array[front]);
+    printf("Front of queue: %d\n", array[head]);
 }
 
-void printQueue(void){
+void showQueue(void){
     if(count == 0){
         printf("Queue empty");
         return;
     }
-    int i = front;
+    int i = head;
     int j;
     printf("Queue: ");
     for(j=0; j<count; j++){
