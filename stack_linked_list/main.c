@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX_INPUT 100
-
 struct node
 {
     int data;
