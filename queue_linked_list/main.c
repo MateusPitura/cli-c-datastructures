@@ -17,6 +17,7 @@ void showQueue(void);
 
 void main(void)
 {
+    dequeue();
     enqueue(1);
     enqueue(2);
     enqueue(3);
@@ -28,6 +29,14 @@ void main(void)
     enqueue(6);
     showQueue();
     peek();
+    dequeue();
+    dequeue();
+    dequeue();
+    dequeue();
+    dequeue();
+    dequeue();
+    peek();
+    showQueue();
 }
 
 void enqueue(int value)
@@ -70,6 +79,7 @@ void peek(void)
     }
     printf("Front of queue: %d\n", head->data);
 }
+
 void showQueue(void)
 {
     if (head == NULL)
