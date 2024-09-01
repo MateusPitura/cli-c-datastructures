@@ -82,15 +82,12 @@ void getIndexByValue(int value)
     {
         if (current->data == value)
         {
-            break;
+            printf("Index of %d is: %d\n", value, index);
+            return;
         }
         index++;
         previous = current;
         current = current->next;
-    }
-    if(current->data == value){
-        printf("Index of %d is: %d\n", value, index);
-        return;
     }
     printf("Value %d not found, index not get\n", value);
 }
