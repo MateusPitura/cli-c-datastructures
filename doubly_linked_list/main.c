@@ -94,12 +94,11 @@ void removeByValue(int value)
         return;
     }
     struct node *current = head;
-    struct node *previous = NULL;
     while (current != NULL)
     {
         if (current->data == value)
         {
-            if (previous == NULL)
+            if (current->previous == NULL)
             { // É o primero
                 head = current->next;
                 if(head != NULL){ // Não era o único
@@ -108,17 +107,16 @@ void removeByValue(int value)
                     tail = NULL;
                 }
             } else { // Não é o primeiro
-                previous->next = current->next;
+                current->previous->next = current->next;
                 if(current->next != NULL){ // Não era o último
-                    current->next->previous = previous;
+                    current->next->previous = current->previous;
                 } else { // Era o último
-                    tail = previous;
+                    tail = current->previous;
                 }
             }
             free(current);
             return;
         }
-        previous = current;
         current = current->next;
     }
     printf("Value %d not found, not removed\n", value);
