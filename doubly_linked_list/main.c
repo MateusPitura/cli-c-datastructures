@@ -77,13 +77,16 @@ void insert(int value, int side)
         aux->next = head;
         head->previous = aux;
         head = aux;
+        return;
     }
-    else // End
+    else if(side == 1)// End
     {
         tail->next = aux;
         aux->previous = tail;
         tail = aux;
+        return;
     }
+    printf("Invalid side");
 }
 
 void removeByValue(int value)
