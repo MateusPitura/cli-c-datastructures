@@ -11,11 +11,18 @@ void setRandomArray(void);
 int checkSort(void);
 void swap(int a, int b);
 void measureTime(void (*sortFunction)(void), char *functionName);
+void showArray(void);
 void bubbleSortBeta(void);
 void bubbleSortAlpha(void);
 void bubbleSortSigma(void);
 void insertionSort(void);
 void selectionSort(void);
+void mergeSort(int start, int end);
+void mergeSortExchange(int start, int end, int middle);
+void handleMergeSort(void);
+void quickSort(int p, int r);
+int quickSortPartition(int p, int r);
+void handleQuickSort(void);
 
 int main(void)
 {
@@ -25,6 +32,8 @@ int main(void)
     measureTime(bubbleSortSigma, "bubbleSortSigma");
     measureTime(insertionSort, "insertionSort");
     measureTime(selectionSort, "selectionSort");
+    measureTime(handleQuickSort, "quickSort");
+    measureTime(handleMergeSort, "mergeSort");
 }
 
 void bubbleSortBeta(void)
@@ -114,6 +123,97 @@ void selectionSort(void)
     }
 }
 
+void mergeSort(int start, int end)
+{ // A primeira chamada será 0 e LENGTH-1;
+    if (start < end)
+    {
+        int middle = (start + end) / 2;
+        mergeSort(start, middle);
+        mergeSort(middle + 1, end);
+        mergeSortExchange(start, end, middle);
+    }
+}
+
+void mergeSortExchange(int start, int end, int middle)
+{
+    int aux[LENGHT];
+    int arrayStart1 = start;
+    int arrayStart2 = middle + 1;
+    int freePosition = start;
+    while (arrayStart1 <= middle && arrayStart2 <= end)
+    {
+        if (ARRAY[arrayStart1] <= ARRAY[arrayStart2])
+        {
+            aux[freePosition] = ARRAY[arrayStart1];
+            arrayStart1++;
+        }
+        else
+        {
+            aux[freePosition] = ARRAY[arrayStart2];
+            arrayStart2++;
+        }
+        freePosition++;
+    }
+    int i;
+    for (i = arrayStart1; i <= middle; i++)
+    {
+        aux[freePosition] = ARRAY[i];
+        freePosition++;
+    }
+    for (i = arrayStart2; i <= end; i++)
+    {
+        aux[freePosition] = ARRAY[i];
+        freePosition++;
+    }
+    for (i = start; i <= end; i++)
+    {
+        ARRAY[i] = aux[i];
+    }
+}
+
+void handleMergeSort(void)
+{
+    mergeSort(0, LENGHT - 1);
+}
+
+void quickSort(int head, int tail)
+{ // A primeira chamada será 0 e LENGTH-1
+    if (head < tail)
+    {
+        int pivot = quickSortPartition(head, tail);
+        quickSort(head, pivot);     // Low side: todos os elementos são penores que o pivot
+        quickSort(pivot + 1, tail); // High side
+    }
+}
+
+int quickSortPartition(int head, int tail)
+{
+    int i = head - 1;
+    int j = tail + 1;
+    int pivot = ARRAY[(head + tail) / 2]; // O pivot será o meio do array
+    while (i < j)
+    {
+        do
+        {
+            j--;
+        } while (ARRAY[j] > pivot);
+        do
+        {
+            i++;
+        } while (ARRAY[i] < pivot);
+        if (i < j)
+        {
+            swap(i, j);
+        }
+    }
+    return j;
+}
+
+void handleQuickSort(void)
+{
+    quickSort(0, LENGHT - 1);
+}
+
 void setRandomArray(void)
 {
     srand(10); // Define a seed dos números aleatórios, fixa para melhor comparação
@@ -170,4 +270,14 @@ void measureTime(void (*sortFunction)(void), char *functionName)
         return;
     }
     printf("Time spent by %s (already sorted): %f seconds\n\n", functionName, (float)timeSpent / CLOCKS_PER_SEC);
+}
+
+void showArray(void)
+{
+    int i;
+    for (i = 0; i < LENGHT; i++)
+    {
+        printf("%d |", ARRAY[i]);
+    }
+    printf("\n");
 }
