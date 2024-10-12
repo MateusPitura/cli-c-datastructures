@@ -1,31 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*
-    PARTE 1: OK
-
-    Gerar um vetor de 20.000
-    Fazer busca sequencial de 1.000 elementos, exibir quantidade média de comparações
-    Fazer busca sequencial com sentinela de 1.000 elementos, exibir quantidade média de comparações
-
-    PARTE 2: OK
-
-    Gerar uma lista encadeada de 20.000
-    Fazer busca sequencial de 1.0000 elementos, exibir quantidade média de comparações
-
-    PARTE 3:
-
-    Gerar uma lista encadeada de 20.000
-    Fazer busca mover para frente de 1.000 elementos, exibir quantidade média de comparações
-    Fazer busca transposição de 1.000 elementos, exibir quantidade média de comparações
-
-    PARTE 4: OK
-
-    Gerar um vetor de 20.000
-    Ordenar e conferir
-    Fazer busca binária de 1.000 elementos, exibir quantidade média de comparações
-*/
-
 #define LENGHT 20000
 #define SEARCH_AMOUNT 1000
 #define NOT_FOUND -1
@@ -68,6 +43,7 @@ void main(void)
     measureSearch(searchSequencialSentinela, "Busca sequencial com sentinela em array");
     measureSearch(searchSequencialLinkedList, "Busca sequencial em lista ligada");
     measureSearch(searchMoverParaFrente, "Busca sequencial mover para frente em lista ligada");
+    measureSearch(searchTransposicao, "Busca sequencial transposição em lista ligada");
     quickSort(0, LENGHT - 1);
     if (checkSort() == 0)
     {
@@ -160,7 +136,30 @@ int searchMoverParaFrente(int value)
 
 int searchTransposicao(int value)
 {
-
+    if (head == NULL)
+    {
+        printf("Stack empty\n");
+        return NOT_FOUND;
+    }
+    struct node *current = head;
+    struct node *previous = NULL;
+    int count = 0;
+    while (current != NULL)
+    {
+        if (current->data == value)
+        {
+            if(previous != NULL){
+                int aux = previous->data;
+                previous->data = current->data;
+                current->data = aux;
+            }
+            return count;
+        }
+        count++;
+        previous = current;
+        current = current->next;
+    }
+    return NOT_FOUND;
 }
 
 int searchBinaria(int value)
