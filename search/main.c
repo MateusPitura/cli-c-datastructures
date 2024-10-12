@@ -49,8 +49,8 @@ void printLinkedList(void);
 int searchSequencialArray(int value);
 int searchSequencialSentinela(int value); // Evita de se fazer 2 comparações por loop (uma é do ARRAY[i] == value e outra do i < LENGHT)
 int searchSequencialLinkedList(int value);
-int searchMoverParaFrente(void);
-int searchTransposicao(void);
+int searchMoverParaFrente(int value);
+int searchTransposicao(int value);
 int searchBinaria(int value);
 
 void quickSort(int p, int r);
@@ -64,9 +64,10 @@ void main(void)
 {
     setRandomArray();
     setRandomLinkedList();
-    measureSearch(searchSequencialArray, "Busca sequencial em array não ordenado");
-    measureSearch(searchSequencialSentinela, "Busca sequencial com sentinela em array não ordenado");
-    measureSearch(searchSequencialLinkedList, "Busca sequencial em lista ligada não ordenada");
+    measureSearch(searchSequencialArray, "Busca sequencial em array");
+    measureSearch(searchSequencialSentinela, "Busca sequencial com sentinela em array");
+    measureSearch(searchSequencialLinkedList, "Busca sequencial em lista ligada");
+    measureSearch(searchMoverParaFrente, "Busca sequencial mover para frente em lista ligada");
     quickSort(0, LENGHT - 1);
     if (checkSort() == 0)
     {
@@ -129,12 +130,37 @@ int searchSequencialLinkedList(int value)
     return NOT_FOUND;
 }
 
-int searchMoverParaFrente(void)
+int searchMoverParaFrente(int value)
 {
+    if (head == NULL)
+    {
+        printf("Stack empty\n");
+        return NOT_FOUND;
+    }
+    struct node *current = head;
+    struct node *previous = NULL;
+    int count = 0;
+    while (current != NULL)
+    {
+        if (current->data == value)
+        {
+            if(previous != NULL){
+                previous->next = current->next;
+            }
+            current->next = head;
+            head = current;
+            return count;
+        }
+        count++;
+        previous = current;
+        current = current->next;
+    }
+    return NOT_FOUND;
 }
 
-int searchTransposicao(void)
+int searchTransposicao(int value)
 {
+
 }
 
 int searchBinaria(int value)
