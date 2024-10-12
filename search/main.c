@@ -8,7 +8,7 @@
     Fazer busca sequencial de 1.000 elementos, exibir quantidade média de comparações
     Fazer busca sequencial com sentinela de 1.000 elementos, exibir quantidade média de comparações
 
-    PARTE 2:
+    PARTE 2: OK
 
     Gerar uma lista encadeada de 20.000
     Fazer busca sequencial de 1.0000 elementos, exibir quantidade média de comparações
@@ -19,7 +19,7 @@
     Fazer busca mover para frente de 1.000 elementos, exibir quantidade média de comparações
     Fazer busca transposição de 1.000 elementos, exibir quantidade média de comparações
 
-    PARTE 4:
+    PARTE 4: OK
 
     Gerar um vetor de 20.000
     Ordenar e conferir
@@ -51,20 +51,28 @@ int searchSequencialSentinela(int value); // Evita de se fazer 2 comparações p
 int searchSequencialLinkedList(int value);
 int searchMoverParaFrente(void);
 int searchTransposicao(void);
-int searchBinaria(void);
+int searchBinaria(int value);
 
-void quickSort(void);
-void checkSort(void);
+void quickSort(int p, int r);
+int quickSortPartition(int p, int r);
+void swap(int a, int b);
+int checkSort(void);
 
 void measureSearch(int (*searchFunction)(int), char *functionName);
 
-int main()
+void main(void)
 {
     setRandomArray();
     setRandomLinkedList();
     measureSearch(searchSequencialArray, "Busca sequencial em array não ordenado");
     measureSearch(searchSequencialSentinela, "Busca sequencial com sentinela em array não ordenado");
     measureSearch(searchSequencialLinkedList, "Busca sequencial em lista ligada não ordenada");
+    quickSort(0, LENGHT - 1);
+    if (checkSort() == 0)
+    {
+        return;
+    }
+    measureSearch(searchBinaria, "Busca binaria em array ordenado");
 }
 
 int searchSequencialArray(int value)
@@ -83,14 +91,14 @@ int searchSequencialArray(int value)
 int searchSequencialSentinela(int value)
 {
     int aux = ARRAY[LENGHT - 1]; // Salvo temporariamente o aux
-    ARRAY[LENGHT - 1] = value; // Coloco o value na última posição para ele sempre encontrar
+    ARRAY[LENGHT - 1] = value;   // Coloco o value na última posição para ele sempre encontrar
     int i = 0;
     while (ARRAY[i] != value)
     {
         i++;
     }
-    ARRAY[LENGHT-1] = aux; // Retorno para a última posição o valor salvo
-    if (i == LENGHT-1)
+    ARRAY[LENGHT - 1] = aux; // Retorno para a última posição o valor salvo
+    if (i == LENGHT - 1)
     {
         return NOT_FOUND;
     }
@@ -105,13 +113,14 @@ int searchSequencialLinkedList(int value)
     if (head == NULL)
     {
         printf("Stack empty\n");
-        return;
+        return NOT_FOUND;
     }
     struct node *aux = head;
     int count = 0;
     while (aux != NULL)
     {
-        if(aux->data == value){
+        if (aux->data == value)
+        {
             return count;
         }
         count++;
@@ -128,16 +137,87 @@ int searchTransposicao(void)
 {
 }
 
-int searchBinaria(void)
+int searchBinaria(int value)
 {
+    int count = 0;
+    int start = 0;
+    int end = LENGHT - 1;
+    while (start <= end)
+    {
+        int middle = (start + end) / 2;
+        if (ARRAY[middle] == value)
+        {
+            return count;
+        }
+        if (ARRAY[middle] < value)
+        {
+            start = middle + 1;
+        }
+        else
+        {
+            end = middle - 1;
+        }
+        count++;
+    }
+    return NOT_FOUND;
 }
 
-void quickSort(void)
+void quickSort(int head, int tail)
 {
+    if (head < tail)
+    {
+        int pivot = quickSortPartition(head, tail);
+        quickSort(head, pivot);
+        quickSort(pivot + 1, tail);
+    }
 }
 
-void checkSort(void)
+int quickSortPartition(int head, int tail)
 {
+    int i = head - 1;
+    int j = tail + 1;
+    int pivot = ARRAY[(head + tail) / 2];
+    while (i < j)
+    {
+        do
+        {
+            j--;
+        } while (ARRAY[j] > pivot);
+        do
+        {
+            i++;
+        } while (ARRAY[i] < pivot);
+        if (i < j)
+        {
+            swap(i, j);
+        }
+    }
+    return j;
+}
+
+void swap(int a, int b)
+{
+    int aux = ARRAY[a];
+    ARRAY[a] = ARRAY[b];
+    ARRAY[b] = aux;
+}
+
+int checkSort(void)
+{
+    int i, count = 0;
+    for (i = 0; i < LENGHT - 1; i++)
+    {
+        if (ARRAY[i] > ARRAY[i + 1])
+        {
+            count++;
+        }
+    }
+    if (count == 0)
+    {
+        return 1; // Sucesso
+    }
+    printf("Unsorted\n");
+    return 0; // Falha
 }
 
 void measureSearch(int (*searchFunction)(int), char *message)
