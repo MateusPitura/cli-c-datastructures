@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 /*
-    PARTE 1:
+    PARTE 1: OK
 
     Gerar um vetor de 20.000
     Fazer busca sequencial de 1.000 elementos, exibir quantidade média de comparações
@@ -48,7 +48,7 @@ void printLinkedList(void);
 
 int searchSequencialArray(int value);
 int searchSequencialSentinela(int value); // Evita de se fazer 2 comparações por loop (uma é do ARRAY[i] == value e outra do i < LENGHT)
-int searchSequencialLinkedList(void);
+int searchSequencialLinkedList(int value);
 int searchMoverParaFrente(void);
 int searchTransposicao(void);
 int searchBinaria(void);
@@ -64,6 +64,7 @@ int main()
     setRandomLinkedList();
     measureSearch(searchSequencialArray, "Busca sequencial em array não ordenado");
     measureSearch(searchSequencialSentinela, "Busca sequencial com sentinela em array não ordenado");
+    measureSearch(searchSequencialLinkedList, "Busca sequencial em lista ligada não ordenada");
 }
 
 int searchSequencialArray(int value)
@@ -99,8 +100,24 @@ int searchSequencialSentinela(int value)
     }
 }
 
-int searchSequencialLinkedList(void)
+int searchSequencialLinkedList(int value)
 {
+    if (head == NULL)
+    {
+        printf("Stack empty\n");
+        return;
+    }
+    struct node *aux = head;
+    int count = 0;
+    while (aux != NULL)
+    {
+        if(aux->data == value){
+            return count;
+        }
+        count++;
+        aux = aux->next;
+    }
+    return NOT_FOUND;
 }
 
 int searchMoverParaFrente(void)
