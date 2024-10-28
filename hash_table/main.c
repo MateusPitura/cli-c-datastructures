@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE 10
+#define SIZE 20
 
 struct node
 {
@@ -30,6 +30,26 @@ int main(void)
     insert(29, 58);
     insert(86, 33);
     insert(50, 20);
+    insert(14, 67);
+    insert(33, 90);
+    insert(55, 21);
+    insert(3, 78);
+    insert(47, 12);
+    insert(65, 84);
+    insert(23, 99);
+    insert(7, 54);
+    insert(88, 42);
+    insert(10, 76);
+    insert(59, 32);
+    insert(26, 11);
+    insert(97, 45);
+    insert(16, 63);
+    insert(82, 9);
+    insert(44, 69);
+    insert(31, 50);
+    insert(75, 18);
+    insert(92, 37);
+    insert(6, 81);
     print();
     search(20);
     search(25);
@@ -38,7 +58,7 @@ int main(void)
 
 int generateHash(int key)
 {
-    return key % 10; // Irá gerar valores de 0 a 9
+    return key % SIZE; // Irá gerar valores de 0 a 9
 }
 
 void insert(int key, int value)
@@ -58,7 +78,7 @@ void search(int key)
     int hash = generateHash(key);
     struct node *aux = BUCKETS[hash];
     if (aux == NULL)
-    {search(39);\
+    {
         printf("Key %d not found\n", key);
         return;
     }
