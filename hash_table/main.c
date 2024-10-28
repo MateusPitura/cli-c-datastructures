@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE 10
+#define SIZE 100
 #define TRUE 1
 #define FALSE 0
 
@@ -14,15 +14,17 @@ struct node
 
 struct node *BUCKETS[SIZE];
 
+int countCollisions = 0;
+int countInserts = 0;
+
 int generateHash(int key);
 int regenerateHash(int position);
 void insert(int key, int value, int rehash);
-void search(int key);
+void search(int key, int rehash);
 void print(void);
 
 int main(void)
 {
-    print();
     insert(23, 45, TRUE);
     insert(78, 92, TRUE);
     insert(34, 56, TRUE);
@@ -37,7 +39,6 @@ int main(void)
     insert(33, 90, TRUE);
     insert(55, 21, TRUE);
     insert(3, 78, TRUE);
-    /*
     insert(47, 12, TRUE);
     insert(65, 84, TRUE);
     insert(23, 99, TRUE);
@@ -54,11 +55,83 @@ int main(void)
     insert(75, 18, TRUE);
     insert(92, 37, TRUE);
     insert(6, 81, TRUE);
-    */
+    insert(12, 23, TRUE);
+    insert(67, 89, TRUE);
+    insert(45, 66, TRUE);
+    insert(98, 27, TRUE);
+    insert(21, 53, TRUE);
+    insert(54, 81, TRUE);
+    insert(16, 39, TRUE);
+    insert(47, 62, TRUE);
+    insert(33, 85, TRUE);
+    insert(49, 73, TRUE);
+    insert(64, 95, TRUE);
+    insert(52, 34, TRUE);
+    insert(87, 90, TRUE);
+    insert(13, 67, TRUE);
+    insert(58, 78, TRUE);
+    insert(11, 25, TRUE);
+    insert(72, 84, TRUE);
+    insert(38, 41, TRUE);
+    insert(93, 76, TRUE);
+    insert(55, 63, TRUE);
+    insert(14, 29, TRUE);
+    insert(65, 88, TRUE);
+    insert(40, 96, TRUE);
+    insert(82, 37, TRUE);
+    insert(77, 55, TRUE);
+    insert(91, 19, TRUE);
+    insert(24, 43, TRUE);
+    insert(75, 68, TRUE);
+    insert(18, 57, TRUE);
+    insert(99, 21, TRUE);
+    insert(59, 80, TRUE);
+    insert(22, 60, TRUE);
+    insert(46, 83, TRUE);
+    insert(31, 69, TRUE);
+    insert(94, 51, TRUE);
+    insert(42, 53, TRUE);
+    insert(26, 71, TRUE);
+    insert(79, 44, TRUE);
+    insert(17, 63, TRUE);
+    insert(35, 97, TRUE);
+    insert(61, 86, TRUE);
+    insert(74, 49, TRUE);
+    insert(53, 20, TRUE);
+    insert(36, 70, TRUE);
+    insert(85, 59, TRUE);
+    insert(28, 64, TRUE);
+    insert(48, 32, TRUE);
+    insert(30, 75, TRUE);
+    insert(62, 88, TRUE);
+    insert(95, 47, TRUE);
+    insert(27, 40, TRUE);
+    insert(66, 52, TRUE);
+    insert(20, 35, TRUE);
+    insert(50, 82, TRUE);
+    insert(39, 91, TRUE);
+    insert(15, 42, TRUE);
+    insert(68, 79, TRUE);
+    insert(37, 61, TRUE);
+    insert(44, 56, TRUE);
+    insert(70, 84, TRUE);
+    insert(57, 92, TRUE);
+    insert(43, 26, TRUE);
+    insert(90, 33, TRUE);
+    insert(19, 58, TRUE);
+    insert(32, 48, TRUE);
+    insert(76, 50, TRUE);
+    insert(89, 54, TRUE);
+    insert(29, 69, TRUE);
+    insert(41, 65, TRUE);
     print();
-    search(20);
-    search(25);
-    search(29);
+    printf("Colissions: %d, inserts: %d, avg: %.2f\n", countCollisions, countInserts, (float)countCollisions / countInserts);
+    printf("\n");
+    search(20, TRUE);
+    search(25, TRUE);
+    search(29, TRUE);
+    search(75, TRUE);
+    search(9, TRUE);
 }
 
 int generateHash(int key)
@@ -89,6 +162,8 @@ void insert(int key, int value, int rehash)
         }
         if (count < SIZE)
         {
+            countCollisions += count;
+            countInserts++;
             BUCKETS[hash] = newElement;
         }
         else
@@ -103,27 +178,49 @@ int regenerateHash(int position)
     return (position + 1) % SIZE;
 }
 
-void search(int key)
+void search(int key, int rehash)
 {
     int hash = generateHash(key);
     struct node *aux = BUCKETS[hash];
+    printf("SEARCH BY KEY %d", key);
     if (aux == NULL)
     {
-        printf("Key %d not found\n", key);
+        printf(": key %d not found, caused by first hash igual to null\n", key, key);
         return;
     }
-    printf("SEARCH BY KEY %d", key);
-    while (aux != NULL)
+    if (rehash == FALSE)
     {
-        printf(" -> Key: %d, value: %d", aux->key, aux->value);
-        aux = aux->next;
+        while (aux != NULL)
+        {
+            printf(" -> Key: %d, value: %d", aux->key, aux->value);
+            aux = aux->next;
+        }
     }
-    printf("\n");
+    else if (rehash == TRUE)
+    {
+        int count = 0;
+        while (aux->key != key && count < SIZE)
+        {
+            count++;
+            hash = regenerateHash(hash);
+            aux = BUCKETS[hash];
+            return;
+        }
+        if (count < SIZE)
+        {
+            printf(": key: %d, value: %d\n", aux->key, aux->value);
+        }
+        else
+        {
+            printf(": key %d not found, caused by search in all buckets\n", key);
+        }
+    }
 }
 
 void print(void)
 {
     struct node *aux;
+    printf("\n");
     int i;
     for (i = 0; i < SIZE; i++)
     {
