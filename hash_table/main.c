@@ -18,7 +18,7 @@ int countCollisions = 0;
 int countInserts = 0;
 
 int generateHash(int key);
-int regenerateHash(int position);
+int regenerateHash(int position, int key);
 void insert(int key, int value, int rehash);
 void search(int key, int rehash);
 void print(void);
@@ -127,16 +127,25 @@ int main(void)
     print();
     printf("Colissions: %d, inserts: %d, avg: %.2f\n", countCollisions, countInserts, (float)countCollisions / countInserts);
     printf("\n");
-    search(20, TRUE);
-    search(25, TRUE);
-    search(29, TRUE);
-    search(75, TRUE);
-    search(9, TRUE);
+    search(25, TRUE); // 0 ocorrências
+    search(9, TRUE);  // 0 ocorrência
+    search(20, TRUE); // 1 ocorrência
+    search(29, TRUE); // 2 ocorrências
+    search(75, TRUE); // 2 ocorrências
 }
 
 int generateHash(int key)
 {
     return key % SIZE; // Irá gerar valores de 0 a 9
+}
+
+int regenerateHash(int position, int key)
+{
+    // Calculo 1: // colissions: 653, inserts: 99, avg: 6.60
+    return (position + 1) % SIZE;
+    // Calculo 2: colissions: 67, inserts: 91, avg: 0.74
+    // int aux = 1 + generateHash(key) % (SIZE - 1);
+    // return (position + aux) % SIZE;
 }
 
 void insert(int key, int value, int rehash)
@@ -158,7 +167,7 @@ void insert(int key, int value, int rehash)
         while (BUCKETS[hash] != NULL && count < SIZE)
         {
             count++;
-            hash = regenerateHash(hash);
+            hash = regenerateHash(hash, key);
         }
         if (count < SIZE)
         {
@@ -173,19 +182,14 @@ void insert(int key, int value, int rehash)
     }
 }
 
-int regenerateHash(int position)
-{
-    return (position + 1) % SIZE;
-}
-
 void search(int key, int rehash)
 {
     int hash = generateHash(key);
     struct node *aux = BUCKETS[hash];
-    printf("SEARCH BY KEY %d", key);
+    printf("SEARCH");
     if (aux == NULL)
     {
-        printf(": key %d not found, caused by first hash igual to null\n", key, key);
+        printf(": key %d not found, caused by first hash igual to null\n", key);
         return;
     }
     if (rehash == FALSE)
@@ -195,6 +199,7 @@ void search(int key, int rehash)
             printf(" -> Key: %d, value: %d", aux->key, aux->value);
             aux = aux->next;
         }
+        printf("\n");
     }
     else if (rehash == TRUE)
     {
@@ -202,9 +207,13 @@ void search(int key, int rehash)
         while (aux->key != key && count < SIZE)
         {
             count++;
-            hash = regenerateHash(hash);
+            hash = regenerateHash(hash, key);
             aux = BUCKETS[hash];
-            return;
+            if (aux == NULL)
+            {
+                printf(": key %d not found, caused by some hash igual to null\n", key);
+                return;
+            }
         }
         if (count < SIZE)
         {
